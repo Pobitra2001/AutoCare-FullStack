@@ -143,3 +143,180 @@ font-size:34px;
 }
 
 }
+/* ===========================
+   Services Page Hero
+=========================== */
+
+.services-hero{
+
+    min-height:45vh;
+
+    background:
+    linear-gradient(rgba(0,0,0,.75),rgba(0,0,0,.75)),
+    url("https://images.unsplash.com/photo-1517524206127-48bbd363f3d7?q=80&w=1600&auto=format&fit=crop");
+
+    background-size:cover;
+
+    background-position:center;
+
+}
+
+/* ===========================
+   Services Page Cards
+=========================== */
+
+.services-page .service-card{
+
+    border-radius:18px;
+
+    transition:.35s;
+
+}
+
+.services-page .service-card:hover{
+
+    transform:translateY(-10px);
+
+}
+
+.services-page .service-icon{
+
+    width:80px;
+
+    height:80px;
+
+    border-radius:50%;
+
+    background:#0d6efd;
+
+    color:#fff;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin:auto;
+
+    font-size:34px;
+
+}
+
+/* ===========================
+   Service Process
+=========================== */
+
+.service-process{
+
+    background:#f8f9fa;
+
+}
+
+.process-card{
+
+    background:#fff;
+
+    padding:35px 25px;
+
+    border-radius:18px;
+
+    transition:.35s;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+    height:100%;
+
+}
+
+.process-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 18px 40px rgba(0,0,0,.15);
+
+}
+
+.process-number{
+
+    width:70px;
+
+    height:70px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    background:#0d6efd;
+
+    color:#fff;
+
+    font-size:28px;
+
+    font-weight:700;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.process-card h5{
+
+    font-weight:700;
+
+}
+
+.process-card p{
+
+    color:#666;
+
+    margin-top:15px;
+
+    line-height:1.8;
+
+}
+
+/* ===========================
+   FAQ
+=========================== */
+
+.accordion-item{
+
+    border:none;
+
+    margin-bottom:18px;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+}
+
+.accordion-button{
+
+    font-weight:600;
+
+    padding:18px 22px;
+
+}
+
+.accordion-button:not(.collapsed){
+
+    background:#0d6efd;
+
+    color:#fff;
+
+}
+
+.accordion-body{
+
+    color:#666;
+
+    line-height:1.8;
+
+}
