@@ -1,0 +1,32 @@
+.about-card{
+    transition: all .35s ease;
+    cursor: pointer;
+}
+
+.about-card:hover{
+
+    transform: translateY(-10px);
+
+    box-shadow: 0 15px 35px rgba(0,0,0,.15)!important;
+}
+
+.about-card i{
+
+    transition: .35s;
+}
+
+.about-card:hover i{
+
+    transform: scale(1.15);
+
+}
+
+.about-card h5{
+
+    margin-top:20px;
+}
+
+.about-card p{
+
+    margin-bottom:0;
+}
