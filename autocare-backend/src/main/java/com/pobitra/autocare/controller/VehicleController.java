@@ -1,0 +1,90 @@
+package com.pobitra.autocare.controller;
+
+import com.pobitra.autocare.dto.VehicleRequestDTO;
+import com.pobitra.autocare.dto.VehicleResponseDTO;
+import com.pobitra.autocare.service.VehicleService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/vehicles")
+@CrossOrigin(origins = {
+        "http://localhost:3000",
+        "http://localhost:5173"
+})
+public class VehicleController {
+
+    private final VehicleService vehicleService;
+
+    public VehicleController(VehicleService vehicleService) {
+        this.vehicleService = vehicleService;
+    }
+
+    // ==========================
+    // Create Vehicle
+    // ==========================
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    @PostMapping
+    public ResponseEntity<VehicleResponseDTO> createVehicle(
+            @Valid @RequestBody VehicleRequestDTO vehicleRequestDTO) {
+
+        VehicleResponseDTO savedVehicle =
+                vehicleService.createVehicle(vehicleRequestDTO);
+
+        return new ResponseEntity<>(savedVehicle, HttpStatus.CREATED);
+    }
+
+    // ==========================
+    // Get All Vehicles
+    // ==========================
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    @GetMapping
+    public ResponseEntity<List<VehicleResponseDTO>> getAllVehicles() {
+
+        return ResponseEntity.ok(vehicleService.getAllVehicles());
+    }
+
+    // ==========================
+    // Get Vehicle By Id
+    // ==========================
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    @GetMapping("/{id}")
+    public ResponseEntity<VehicleResponseDTO> getVehicleById(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(vehicleService.getVehicleById(id));
+    }
+
+    // ==========================
+    // Update Vehicle
+    // ==========================
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    @PutMapping("/{id}")
+    public ResponseEntity<VehicleResponseDTO> updateVehicle(
+            @PathVariable Long id,
+            @Valid @RequestBody VehicleRequestDTO vehicleRequestDTO) {
+
+        VehicleResponseDTO updatedVehicle =
+                vehicleService.updateVehicle(id, vehicleRequestDTO);
+
+        return ResponseEntity.ok(updatedVehicle);
+    }
+
+    // ==========================
+    // Delete Vehicle
+    // ==========================
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteVehicle(
+            @PathVariable Long id) {
+
+        vehicleService.deleteVehicle(id);
+
+        return ResponseEntity.ok("Vehicle deleted successfully.");
+    }
+}
