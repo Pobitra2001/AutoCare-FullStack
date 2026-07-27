@@ -18,8 +18,13 @@ function Navbar() {
 
                 <button
                     className="navbar-toggler"
+                    type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target="#menu">
+                    data-bs-target="#menu"
+                    aria-controls="menu"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
 
                     <span className="navbar-toggler-icon"></span>
 
@@ -72,22 +77,11 @@ function Navbar() {
                         <li className="nav-item ms-3">
 
                             <NavLink
-                                className="nav-link btn-login"
-                                to="/login">
-
-                                Login
-
-                            </NavLink>
-
-                        </li>
-
-                        <li className="nav-item ms-2">
-
-                            <NavLink
                                 className="nav-link btn-register"
-                                to="/register">
+                                to="/register"
+                            >
 
-                                Register
+                                Join AutoCare
 
                             </NavLink>
 

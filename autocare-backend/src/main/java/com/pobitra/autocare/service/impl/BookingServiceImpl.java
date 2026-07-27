@@ -3,10 +3,12 @@ package com.pobitra.autocare.service.impl;
 import com.pobitra.autocare.dto.BookingRequestDTO;
 import com.pobitra.autocare.dto.BookingResponseDTO;
 import com.pobitra.autocare.entity.Booking;
+import com.pobitra.autocare.entity.User;
 import com.pobitra.autocare.enums.BookingStatus;
 import com.pobitra.autocare.exception.DuplicateResourceException;
 import com.pobitra.autocare.exception.ResourceNotFoundException;
 import com.pobitra.autocare.repository.BookingRepository;
+import com.pobitra.autocare.repository.UserRepository;
 import com.pobitra.autocare.service.BookingService;
 import com.pobitra.autocare.service.EmailService;
 import org.springframework.stereotype.Service;
@@ -19,27 +21,36 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final EmailService emailService;
+    private final UserRepository userRepository;
 
     public BookingServiceImpl(
             BookingRepository bookingRepository,
-            EmailService emailService) {
+            EmailService emailService,
+            UserRepository userRepository) {
 
         this.bookingRepository = bookingRepository;
         this.emailService = emailService;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public BookingResponseDTO createBooking(BookingRequestDTO dto) {
+    public BookingResponseDTO createBooking(
+            BookingRequestDTO dto,
+            String email) {
 
         if (bookingRepository.existsByVehicleNumber(dto.getVehicleNumber())) {
             throw new DuplicateResourceException(
                     "Vehicle number already has an active booking.");
         }
 
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found."));
+
         Booking booking = new Booking();
 
-        booking.setCustomerName(dto.getCustomerName());
-        booking.setEmail(dto.getEmail());
+        booking.setCustomerName(user.getFullName());
+        booking.setEmail(user.getEmail());
         booking.setPhone(dto.getPhone());
         booking.setVehicleNumber(dto.getVehicleNumber());
         booking.setVehicleModel(dto.getVehicleModel());
@@ -103,6 +114,16 @@ public class BookingServiceImpl implements BookingService {
 
         return mapToDTO(booking);
     }
+    @Override
+    public List<BookingResponseDTO> getMyBookings(
+            String email) {
+
+        return bookingRepository.findByEmail(email)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
     @Override
     public List<BookingResponseDTO> getBookingsByEmail(String email) {
 

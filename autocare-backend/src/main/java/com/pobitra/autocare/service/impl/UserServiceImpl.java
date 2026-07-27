@@ -10,6 +10,9 @@ import com.pobitra.autocare.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.pobitra.autocare.dto.ChangePasswordRequestDTO;
+import com.pobitra.autocare.dto.UpdateProfileRequestDTO;
+import com.pobitra.autocare.dto.UserProfileResponseDTO;
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -71,5 +74,69 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found."));
+    }
+
+    @Override
+    public UserProfileResponseDTO getProfile(String email) {
+
+        User user = findByEmail(email);
+
+        return mapToProfileDTO(user);
+    }
+
+    @Override
+    public UserProfileResponseDTO updateProfile(
+            String email,
+            UpdateProfileRequestDTO dto) {
+
+        User user = findByEmail(email);
+
+        user.setFullName(dto.getFullName());
+
+        User updatedUser = userRepository.save(user);
+
+        return mapToProfileDTO(updatedUser);
+    }
+
+    @Override
+    public void changePassword(
+            String email,
+            ChangePasswordRequestDTO dto) {
+
+        User user = findByEmail(email);
+
+        if (!passwordEncoder.matches(
+                dto.getCurrentPassword(),
+                user.getPassword())) {
+
+            throw new IllegalArgumentException(
+                    "Current password is incorrect.");
+        }
+
+        if (!dto.getNewPassword().equals(
+                dto.getConfirmPassword())) {
+
+            throw new IllegalArgumentException(
+                    "New password and confirm password do not match.");
+        }
+
+        user.setPassword(
+                passwordEncoder.encode(dto.getNewPassword()));
+
+        userRepository.save(user);
+    }
+
+    private UserProfileResponseDTO mapToProfileDTO(User user) {
+
+        UserProfileResponseDTO dto =
+                new UserProfileResponseDTO();
+
+        dto.setId(user.getId());
+        dto.setFullName(user.getFullName());
+        dto.setEmail(user.getEmail());
+        dto.setRole(user.getRole());
+        dto.setCreatedAt(user.getCreatedAt());
+
+        return dto;
     }
 }

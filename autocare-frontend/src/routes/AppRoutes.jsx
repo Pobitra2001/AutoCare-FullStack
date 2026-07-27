@@ -9,7 +9,6 @@ import Register from "../pages/auth/Register";
 import NotFound from "../pages/error/NotFound";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import StaffDashboard from "../pages/staff/StaffDashboard";
-import CustomerDashboard from "../pages/customer/CustomerDashboard";
 import CustomerList from "../pages/admin/customers/CustomerList";
 import CustomerForm from "../pages/admin/customers/CustomerForm";
 import VehicleList from "../pages/admin/vehicles/VehicleList";
@@ -29,6 +28,10 @@ import FeedbackForm from "../pages/admin/feedback/FeedbackForm";
 import FeedbackDetails from "../pages/admin/feedback/FeedbackDetails";
 import ContactMessageList from "../pages/admin/contactmessages/ContactMessageList";
 import ContactMessageDetails from "../pages/admin/contactmessages/ContactMessageDetails";
+import CustomerDashboard from "../pages/customer/CustomerDashboard";
+import BookService from "../pages/customer/BookService";
+import MyBookings from "../pages/customer/MyBookings";
+import Profile from "../pages/customer/Profile";
 
 
 
@@ -163,6 +166,24 @@ function AppRoutes() {
                             <Route
                                 path="/admin/contact-messages/view/:id"
                                 element={<ContactMessageDetails />}
+                            />
+                            <Route
+                                path="/customer/dashboard"
+                                element={<CustomerDashboard />}
+                            />
+
+                            <Route
+                                 path="/customer/book-service"
+                                 element={<BookService />}
+                            />
+
+                            <Route
+                                 path="/customer/bookings"
+                                 element={<MyBookings />}
+                            />
+                            <Route
+                                path="/customer/profile"
+                                element={<Profile />}
                             />
 
 

@@ -7,7 +7,6 @@ import authService from "../../services/authService";
 function Login() {
 
     const navigate = useNavigate();
-
     const { login } = useAuth();
 
     const [formData, setFormData] = useState({
@@ -16,14 +15,15 @@ function Login() {
     });
 
     const [error, setError] = useState("");
-
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
+
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
         });
+
     };
 
     const handleSubmit = async (e) => {
@@ -37,29 +37,38 @@ function Login() {
 
             const response = await authService.login(formData);
 
+            // Save token & user in AuthContext/localStorage
             login(response.data);
 
             const role = response.data.role;
 
-            if (role === "ADMIN") {
+            switch (role) {
 
-                navigate("/admin/dashboard");
+                case "ADMIN":
+                    navigate("/admin/dashboard");
+                    break;
 
-            } else if (role === "STAFF") {
+                case "STAFF":
+                    navigate("/staff/dashboard");
+                    break;
 
-                navigate("/staff/dashboard");
-
-            } else {
-
-                navigate("/customer/dashboard");
+                case "CUSTOMER":
+                default:
+                    navigate("/customer/dashboard");
+                    break;
 
             }
 
         } catch (err) {
 
+            console.error(err);
+
             setError(
+
                 err.response?.data?.message ||
+
                 "Invalid email or password."
+
             );
 
         } finally {
@@ -67,9 +76,11 @@ function Login() {
             setLoading(false);
 
         }
+
     };
 
     return (
+
         <div className="container py-5">
 
             <div className="row justify-content-center">
@@ -80,26 +91,40 @@ function Login() {
 
                         <div className="card-body p-5">
 
-                            <h2 className="text-center mb-4">
+                            <h2 className="text-center mb-2">
+
                                 Welcome Back
+
                             </h2>
 
                             <p className="text-center text-muted mb-4">
-                                Login to AutoCare
+
+                                Login to your AutoCare account
+
                             </p>
 
-                            {error && (
-                                <div className="alert alert-danger">
-                                    {error}
-                                </div>
-                            )}
+                            {
+
+                                error && (
+
+                                    <div className="alert alert-danger">
+
+                                        {error}
+
+                                    </div>
+
+                                )
+
+                            }
 
                             <form onSubmit={handleSubmit}>
 
                                 <div className="mb-3">
 
                                     <label className="form-label">
+
                                         Email
+
                                     </label>
 
                                     <input
@@ -108,6 +133,7 @@ function Login() {
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
+                                        placeholder="Enter your email"
                                         required
                                     />
 
@@ -116,7 +142,9 @@ function Login() {
                                 <div className="mb-4">
 
                                     <label className="form-label">
+
                                         Password
+
                                     </label>
 
                                     <input
@@ -125,30 +153,51 @@ function Login() {
                                         name="password"
                                         value={formData.password}
                                         onChange={handleChange}
+                                        placeholder="Enter your password"
                                         required
                                     />
 
                                 </div>
 
                                 <button
-                                    className="btn btn-primary w-100"
                                     type="submit"
+                                    className="btn btn-primary w-100 py-2"
                                     disabled={loading}
                                 >
-                                    {loading ? "Logging in..." : "Login"}
+
+                                    {
+
+                                        loading
+
+                                            ? "Logging in..."
+
+                                            : "Login"
+
+                                    }
+
                                 </button>
 
                             </form>
 
-                            <div className="text-center mt-4">
+                            <hr className="my-4" />
 
-                                Don't have an account?
+                            <div className="text-center">
+
+                                <span className="text-muted">
+
+                                    New to AutoCare?
+
+                                </span>
+
+                                {" "}
 
                                 <Link
                                     to="/register"
-                                    className="ms-2"
+                                    className="fw-semibold text-decoration-none"
                                 >
-                                    Register
+
+                                    Join AutoCare
+
                                 </Link>
 
                             </div>
@@ -162,7 +211,9 @@ function Login() {
             </div>
 
         </div>
+
     );
+
 }
 
 export default Login;

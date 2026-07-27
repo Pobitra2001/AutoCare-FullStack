@@ -1,7 +1,6 @@
 package com.pobitra.autocare.dto;
 
 import com.pobitra.autocare.enums.ServiceType;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,13 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class BookingRequestDTO {
-
-    @NotBlank(message = "Customer name is required")
-    private String customerName;
-
-    @Email(message = "Invalid email")
-    @NotBlank(message = "Email is required")
-    private String email;
 
     @NotBlank(message = "Phone number is required")
     private String phone;
@@ -36,22 +28,6 @@ public class BookingRequestDTO {
     private String notes;
 
     public BookingRequestDTO() {
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPhone() {

@@ -1,4 +1,6 @@
 package com.pobitra.autocare.controller;
+import java.security.Principal;
+
 
 import com.pobitra.autocare.dto.BookingRequestDTO;
 import com.pobitra.autocare.dto.BookingResponseDTO;
@@ -31,10 +33,11 @@ public class BookingController {
     @Operation(summary = "Create a new booking")
     @PostMapping
     public ResponseEntity<BookingResponseDTO> createBooking(
-            @Valid @RequestBody BookingRequestDTO dto) {
+            @Valid @RequestBody BookingRequestDTO dto,
+            Principal principal) {
 
         return new ResponseEntity<>(
-                bookingService.createBooking(dto),
+                bookingService.createBooking(dto, principal.getName()),
                 HttpStatus.CREATED);
     }
 
@@ -55,13 +58,17 @@ public class BookingController {
                 bookingService.getBookingById(id));
     }
 
-    @Operation(summary = "Get bookings by email")
-    @GetMapping("/email/{email}")
-    public ResponseEntity<List<BookingResponseDTO>> getBookingsByEmail(
-            @PathVariable String email) {
+
+    @Operation(summary = "Get logged-in customer's bookings")
+    @GetMapping("/my-bookings")
+    public ResponseEntity<List<BookingResponseDTO>> getMyBookings(
+            Principal principal) {
 
         return ResponseEntity.ok(
-                bookingService.getBookingsByEmail(email));
+                bookingService.getMyBookings(
+                        principal.getName()
+                )
+        );
     }
 
     @Operation(summary = "Get bookings by status")
