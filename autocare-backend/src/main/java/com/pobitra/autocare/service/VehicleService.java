@@ -7,18 +7,37 @@ import java.util.List;
 
 public interface VehicleService {
 
-    // Create Vehicle
-    VehicleResponseDTO createVehicle(VehicleRequestDTO dto);
+    // ==============================
+    // CUSTOMER
+    // ==============================
 
-    // Get All Vehicles
+    // Add a vehicle for the logged-in customer
+    VehicleResponseDTO createVehicle(
+            VehicleRequestDTO dto,
+            String email);
+
+    // Get all vehicles of the logged-in customer
+    List<VehicleResponseDTO> getMyVehicles(
+            String email);
+
+    // Update own vehicle
+    VehicleResponseDTO updateVehicle(
+            Long id,
+            VehicleRequestDTO dto,
+            String email);
+
+    // Delete own vehicle
+    void deleteVehicle(
+            Long id,
+            String email);
+
+    // ==============================
+    // ADMIN / STAFF
+    // ==============================
+
+    // View all vehicles
     List<VehicleResponseDTO> getAllVehicles();
 
-    // Get Vehicle By ID
+    // View vehicle details
     VehicleResponseDTO getVehicleById(Long id);
-
-    // Update Vehicle
-    VehicleResponseDTO updateVehicle(Long id, VehicleRequestDTO dto);
-
-    // Delete Vehicle
-    void deleteVehicle(Long id);
 }

@@ -3,12 +3,15 @@ package com.pobitra.autocare.controller;
 import com.pobitra.autocare.dto.VehicleRequestDTO;
 import com.pobitra.autocare.dto.VehicleResponseDTO;
 import com.pobitra.autocare.service.VehicleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -17,6 +20,7 @@ import java.util.List;
         "http://localhost:3000",
         "http://localhost:5173"
 })
+@Tag(name = "Vehicle API", description = "Vehicle Management APIs")
 public class VehicleController {
 
     private final VehicleService vehicleService;
@@ -25,66 +29,111 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
-    // ==========================
-    // Create Vehicle
-    // ==========================
-    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    // ===========================================
+    // CUSTOMER : ADD VEHICLE
+    // ===========================================
+
+    @Operation(summary = "Add Vehicle")
+    @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping
     public ResponseEntity<VehicleResponseDTO> createVehicle(
-            @Valid @RequestBody VehicleRequestDTO vehicleRequestDTO) {
+            @Valid @RequestBody VehicleRequestDTO dto,
+            Principal principal) {
 
-        VehicleResponseDTO savedVehicle =
-                vehicleService.createVehicle(vehicleRequestDTO);
-
-        return new ResponseEntity<>(savedVehicle, HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                vehicleService.createVehicle(
+                        dto,
+                        principal.getName()
+                ),
+                HttpStatus.CREATED
+        );
     }
 
-    // ==========================
-    // Get All Vehicles
-    // ==========================
+    // ===========================================
+    // CUSTOMER : MY VEHICLES
+    // ===========================================
+
+    @Operation(summary = "Get My Vehicles")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @GetMapping("/my")
+    public ResponseEntity<List<VehicleResponseDTO>> getMyVehicles(
+            Principal principal) {
+
+        return ResponseEntity.ok(
+                vehicleService.getMyVehicles(
+                        principal.getName()
+                )
+        );
+    }
+
+    // ===========================================
+    // ADMIN / STAFF : ALL VEHICLES
+    // ===========================================
+
+    @Operation(summary = "Get All Vehicles")
     @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     @GetMapping
     public ResponseEntity<List<VehicleResponseDTO>> getAllVehicles() {
 
-        return ResponseEntity.ok(vehicleService.getAllVehicles());
+        return ResponseEntity.ok(
+                vehicleService.getAllVehicles()
+        );
     }
 
-    // ==========================
-    // Get Vehicle By Id
-    // ==========================
+    // ===========================================
+    // ADMIN / STAFF : VEHICLE BY ID
+    // ===========================================
+
+    @Operation(summary = "Get Vehicle By Id")
     @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     @GetMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> getVehicleById(
             @PathVariable Long id) {
 
-        return ResponseEntity.ok(vehicleService.getVehicleById(id));
+        return ResponseEntity.ok(
+                vehicleService.getVehicleById(id)
+        );
     }
+    // ===========================================
+    // CUSTOMER : UPDATE VEHICLE
+    // ===========================================
 
-    // ==========================
-    // Update Vehicle
-    // ==========================
-    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    @Operation(summary = "Update Vehicle")
+    @PreAuthorize("hasRole('CUSTOMER')")
     @PutMapping("/{id}")
     public ResponseEntity<VehicleResponseDTO> updateVehicle(
             @PathVariable Long id,
-            @Valid @RequestBody VehicleRequestDTO vehicleRequestDTO) {
+            @Valid @RequestBody VehicleRequestDTO dto,
+            Principal principal) {
 
-        VehicleResponseDTO updatedVehicle =
-                vehicleService.updateVehicle(id, vehicleRequestDTO);
-
-        return ResponseEntity.ok(updatedVehicle);
+        return ResponseEntity.ok(
+                vehicleService.updateVehicle(
+                        id,
+                        dto,
+                        principal.getName()
+                )
+        );
     }
 
-    // ==========================
-    // Delete Vehicle
-    // ==========================
-    @PreAuthorize("hasRole('ADMIN')")
+    // ===========================================
+    // CUSTOMER : DELETE VEHICLE
+    // ===========================================
+
+    @Operation(summary = "Delete Vehicle")
+    @PreAuthorize("hasRole('CUSTOMER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteVehicle(
-            @PathVariable Long id) {
+            @PathVariable Long id,
+            Principal principal) {
 
-        vehicleService.deleteVehicle(id);
+        vehicleService.deleteVehicle(
+                id,
+                principal.getName()
+        );
 
-        return ResponseEntity.ok("Vehicle deleted successfully.");
+        return ResponseEntity.ok(
+                "Vehicle deleted successfully."
+        );
     }
+
 }

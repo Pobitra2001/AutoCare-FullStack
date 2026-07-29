@@ -32,6 +32,9 @@ import CustomerDashboard from "../pages/customer/CustomerDashboard";
 import BookService from "../pages/customer/BookService";
 import MyBookings from "../pages/customer/MyBookings";
 import Profile from "../pages/customer/Profile";
+import MyVehicles from "../pages/customer/MyVehicles";
+import AddVehicle from "../pages/customer/AddVehicle";
+import EditVehicle from "../pages/customer/EditVehicle";
 
 
 
@@ -184,6 +187,17 @@ function AppRoutes() {
                             <Route
                                 path="/customer/profile"
                                 element={<Profile />}
+                            />
+                            <Route path="/customer/vehicles"
+                                  element={<MyVehicles />}
+                            />
+
+                            <Route path="/customer/vehicles/add"
+                                  element={<AddVehicle />} 
+                            />
+
+                            <Route path="/customer/vehicles/edit/:id"
+                                    element={<EditVehicle />}
                             />
 
 

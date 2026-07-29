@@ -6,15 +6,27 @@ import com.pobitra.autocare.enums.VehicleType;
 public class VehicleResponseDTO {
 
     private Long id;
+
     private String customerName;
-    private String vehicleNumber;
-    private String brand;
-    private String model;
-    private String color;
-    private VehicleType vehicleType;
-    private FuelType fuelType;
-    private Integer manufacturingYear;
+
     private Long customerId;
+
+    private String vehicleNumber;
+
+    private String brand;
+
+    private String model;
+
+    private String color;
+
+    private VehicleType vehicleType;
+
+    private FuelType fuelType;
+
+    private Integer manufacturingYear;
+
+    public VehicleResponseDTO() {
+    }
 
     public Long getId() {
         return id;
@@ -22,6 +34,22 @@ public class VehicleResponseDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
     public String getVehicleNumber() {
@@ -79,16 +107,4 @@ public class VehicleResponseDTO {
     public void setManufacturingYear(Integer manufacturingYear) {
         this.manufacturingYear = manufacturingYear;
     }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-
-    public void setCustomerName(String name) { this.customerName=customerName ;
-    }
-// getters and setters
 }

@@ -36,14 +36,15 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config)
+            AuthenticationConfiguration configuration)
             throws Exception {
 
-        return config.getAuthenticationManager();
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http)
             throws Exception {
 
         http
@@ -56,9 +57,10 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // ===========================
-                        // Public APIs
-                        // ===========================
+                        // =========================================
+                        // PUBLIC APIs
+                        // =========================================
+
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/contact/**",
@@ -68,9 +70,11 @@ public class SecurityConfig {
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        // ===========================
-                        // CUSTOMER APIs
-                        // ===========================
+                        // =========================================
+                        // BOOKING APIs
+                        // =========================================
+
+                        // Customer
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/bookings"
@@ -78,25 +82,13 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/api/bookings/my-bookings"
+                                "/api/bookings/my"
                         ).hasRole("CUSTOMER")
 
-                        // ===========================
-                        // ADMIN & STAFF APIs
-                        // ===========================
+                        // Admin / Staff
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/api/bookings"
-                        ).hasAnyRole("ADMIN", "STAFF")
-
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/bookings/{id}"
-                        ).hasAnyRole("ADMIN", "STAFF")
-
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/bookings/status/**"
+                                "/api/bookings/**"
                         ).hasAnyRole("ADMIN", "STAFF")
 
                         .requestMatchers(
@@ -109,21 +101,45 @@ public class SecurityConfig {
                                 "/api/bookings/**"
                         ).hasRole("ADMIN")
 
+                        // =========================================
+                        // VEHICLE APIs
+                        // =========================================
+
+                        // Customer
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/vehicles"
+                        ).hasRole("CUSTOMER")
 
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/api/users/profile"
-                        ).authenticated()
+                                "/api/vehicles/my"
+                        ).hasRole("CUSTOMER")
 
                         .requestMatchers(
                                 HttpMethod.PUT,
-                                "/api/users/profile"
-                        ).authenticated()
+                                "/api/vehicles/**"
+                        ).hasRole("CUSTOMER")
 
                         .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/users/change-password"
-                        ).authenticated()
+                                HttpMethod.DELETE,
+                                "/api/vehicles/**"
+                        ).hasRole("CUSTOMER")
+
+                        // Staff / Admin
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/vehicles"
+                        ).hasAnyRole("ADMIN", "STAFF")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/vehicles/*"
+                        ).hasAnyRole("ADMIN", "STAFF")
+
+                        // =========================================
 
                         .anyRequest()
                         .authenticated()
@@ -133,9 +149,9 @@ public class SecurityConfig {
 
                 .addFilterBefore(
                         jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 }

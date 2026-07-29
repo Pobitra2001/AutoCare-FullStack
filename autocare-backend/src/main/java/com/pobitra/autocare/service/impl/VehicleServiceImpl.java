@@ -3,44 +3,58 @@ package com.pobitra.autocare.service.impl;
 import com.pobitra.autocare.dto.VehicleRequestDTO;
 import com.pobitra.autocare.dto.VehicleResponseDTO;
 import com.pobitra.autocare.entity.Customer;
+import com.pobitra.autocare.entity.User;
 import com.pobitra.autocare.entity.Vehicle;
+import com.pobitra.autocare.exception.DuplicateResourceException;
 import com.pobitra.autocare.exception.ResourceNotFoundException;
 import com.pobitra.autocare.repository.CustomerRepository;
+import com.pobitra.autocare.repository.UserRepository;
 import com.pobitra.autocare.repository.VehicleRepository;
 import com.pobitra.autocare.service.VehicleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
 
     public VehicleServiceImpl(
             VehicleRepository vehicleRepository,
-            CustomerRepository customerRepository) {
+            CustomerRepository customerRepository,
+            UserRepository userRepository) {
 
         this.vehicleRepository = vehicleRepository;
         this.customerRepository = customerRepository;
+        this.userRepository = userRepository;
     }
 
-    // ==========================
-    // Create Vehicle
-    // ==========================
+    // ===========================================
+    // CUSTOMER : CREATE VEHICLE
+    // ===========================================
+
     @Override
-    public VehicleResponseDTO createVehicle(VehicleRequestDTO dto) {
+    public VehicleResponseDTO createVehicle(
+            VehicleRequestDTO dto,
+            String email) {
 
         if (vehicleRepository.existsByVehicleNumber(dto.getVehicleNumber())) {
-            throw new RuntimeException("Vehicle number already exists.");
+            throw new DuplicateResourceException(
+                    "Vehicle number already exists.");
         }
 
-        Customer customer = customerRepository.findById(dto.getCustomerId())
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Customer not found with id: " + dto.getCustomerId()));
+                                "User not found."));
+
+        Customer customer = customerRepository.findByEmail(user.getEmail())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Customer not found."));
 
         Vehicle vehicle = new Vehicle();
 
@@ -58,47 +72,82 @@ public class VehicleServiceImpl implements VehicleService {
         return mapToDTO(savedVehicle);
     }
 
-    // ==========================
-    // Get All Vehicles
-    // ==========================
+    // ===========================================
+    // CUSTOMER : MY VEHICLES
+    // ===========================================
+
+    @Override
+    public List<VehicleResponseDTO> getMyVehicles(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found."));
+
+        Customer customer = customerRepository.findByEmail(user.getEmail())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Customer not found."));
+
+        return vehicleRepository.findByCustomerId(customer.getId())
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    // ===========================================
+    // ADMIN / STAFF
+    // ===========================================
+
     @Override
     public List<VehicleResponseDTO> getAllVehicles() {
 
         return vehicleRepository.findAll()
                 .stream()
                 .map(this::mapToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    // ==========================
-    // Get Vehicle By ID
-    // ==========================
     @Override
     public VehicleResponseDTO getVehicleById(Long id) {
 
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Vehicle not found with id: " + id));
+                                "Vehicle not found."));
 
         return mapToDTO(vehicle);
     }
+    // ===========================================
+    // CUSTOMER : UPDATE VEHICLE
+    // ===========================================
 
-    // ==========================
-    // Update Vehicle
-    // ==========================
     @Override
-    public VehicleResponseDTO updateVehicle(Long id, VehicleRequestDTO dto) {
+    public VehicleResponseDTO updateVehicle(
+            Long id,
+            VehicleRequestDTO dto,
+            String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found."));
+
+        Customer customer = customerRepository.findByEmail(user.getEmail())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Customer not found."));
 
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Vehicle not found with id: " + id));
+                                "Vehicle not found."));
 
-        Customer customer = customerRepository.findById(dto.getCustomerId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Customer not found with id: " + dto.getCustomerId()));
+        // Customer can update only his own vehicle
+        if (!vehicle.getCustomer().getId().equals(customer.getId())) {
+            throw new ResourceNotFoundException(
+                    "Vehicle not found.");
+        }
 
         vehicle.setVehicleNumber(dto.getVehicleNumber());
         vehicle.setBrand(dto.getBrand());
@@ -107,30 +156,49 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setVehicleType(dto.getVehicleType());
         vehicle.setFuelType(dto.getFuelType());
         vehicle.setManufacturingYear(dto.getManufacturingYear());
-        vehicle.setCustomer(customer);
 
         Vehicle updatedVehicle = vehicleRepository.save(vehicle);
 
         return mapToDTO(updatedVehicle);
     }
 
-    // ==========================
-    // Delete Vehicle
-    // ==========================
+    // ===========================================
+    // CUSTOMER : DELETE VEHICLE
+    // ===========================================
+
     @Override
-    public void deleteVehicle(Long id) {
+    public void deleteVehicle(
+            Long id,
+            String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found."));
+
+        Customer customer = customerRepository.findByEmail(user.getEmail())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Customer not found."));
 
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Vehicle not found with id: " + id));
+                                "Vehicle not found."));
+
+        // Customer can delete only his own vehicle
+        if (!vehicle.getCustomer().getId().equals(customer.getId())) {
+            throw new ResourceNotFoundException(
+                    "Vehicle not found.");
+        }
 
         vehicleRepository.delete(vehicle);
     }
 
-    // ==========================
-    // Entity -> DTO
-    // ==========================
+    // ===========================================
+    // ENTITY -> DTO
+    // ===========================================
+
     private VehicleResponseDTO mapToDTO(Vehicle vehicle) {
 
         VehicleResponseDTO dto = new VehicleResponseDTO();
@@ -143,10 +211,9 @@ public class VehicleServiceImpl implements VehicleService {
         dto.setVehicleType(vehicle.getVehicleType());
         dto.setFuelType(vehicle.getFuelType());
         dto.setManufacturingYear(vehicle.getManufacturingYear());
-        dto.setCustomerId(vehicle.getCustomer().getId());
 
-        // Uncomment only if VehicleResponseDTO has customerName
-        // dto.setCustomerName(vehicle.getCustomer().getName());
+        dto.setCustomerId(vehicle.getCustomer().getId());
+        dto.setCustomerName(vehicle.getCustomer().getName());
 
         return dto;
     }
