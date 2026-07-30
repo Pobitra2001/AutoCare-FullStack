@@ -3,8 +3,6 @@ services:
     name: autocare-backend
     runtime: docker
     rootDir: autocare-backend
-    buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/autocare-backend-0.0.1-SNAPSHOT.jar"
 
     envVars:
       - key: DB_URL
