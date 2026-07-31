@@ -15,10 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/contact-messages")
-@CrossOrigin(origins = {
-        "http://localhost:3000",
-        "http://localhost:5173"
-})
+
 @Tag(name = "Contact API", description = "Operations related to Contact Messages")
 public class ContactMessageController {
 

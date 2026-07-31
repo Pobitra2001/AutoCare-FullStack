@@ -16,10 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicles")
-@CrossOrigin(origins = {
-        "http://localhost:3000",
-        "http://localhost:5173"
-})
+
 @Tag(name = "Vehicle API", description = "Vehicle Management APIs")
 public class VehicleController {
 

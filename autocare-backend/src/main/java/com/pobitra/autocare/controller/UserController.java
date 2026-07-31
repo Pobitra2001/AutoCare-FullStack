@@ -14,10 +14,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = {
-        "http://localhost:3000",
-        "http://localhost:5173"
-})
+
 @Tag(name = "User API", description = "User Profile APIs")
 public class UserController {
 

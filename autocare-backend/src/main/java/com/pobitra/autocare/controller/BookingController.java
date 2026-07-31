@@ -17,10 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/bookings")
-@CrossOrigin(origins = {
-        "http://localhost:3000",
-        "http://localhost:5173"
-})
+
 @Tag(name = "Booking API", description = "Vehicle Service Booking APIs")
 public class BookingController {
 
