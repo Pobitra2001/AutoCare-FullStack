@@ -66,6 +66,8 @@ public class SecurityConfig {
                         // PUBLIC APIs
                         // =========================================
 
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/contact/**",
