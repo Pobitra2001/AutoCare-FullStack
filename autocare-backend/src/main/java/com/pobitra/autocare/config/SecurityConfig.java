@@ -13,10 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import java.util.List;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -40,34 +41,30 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration)
-            throws Exception {
+            AuthenticationConfiguration configuration) throws Exception {
 
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
 
         http
-
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
 
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS))
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(auth -> auth
+
+                        // Allow all CORS preflight requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // =========================================
                         // PUBLIC APIs
                         // =========================================
-
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/contact/**",
@@ -82,94 +79,70 @@ public class SecurityConfig {
                         // =========================================
 
                         // Customer
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/bookings"
-                        ).hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "/api/bookings")
+                        .hasRole("CUSTOMER")
 
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/bookings/my"
-                        ).hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/bookings/my")
+                        .hasRole("CUSTOMER")
 
                         // Admin / Staff
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/bookings/**"
-                        ).hasAnyRole("ADMIN", "STAFF")
+                        .requestMatchers(HttpMethod.GET, "/api/bookings/**")
+                        .hasAnyRole("ADMIN", "STAFF")
 
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/bookings/**"
-                        ).hasAnyRole("ADMIN", "STAFF")
+                        .requestMatchers(HttpMethod.PUT, "/api/bookings/**")
+                        .hasAnyRole("ADMIN", "STAFF")
 
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/api/bookings/**"
-                        ).hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/bookings/**")
+                        .hasRole("ADMIN")
 
                         // =========================================
                         // VEHICLE APIs
                         // =========================================
 
                         // Customer
+                        .requestMatchers(HttpMethod.POST, "/api/vehicles")
+                        .hasRole("CUSTOMER")
 
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/vehicles"
-                        ).hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/vehicles/my")
+                        .hasRole("CUSTOMER")
 
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/vehicles/my"
-                        ).hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.PUT, "/api/vehicles/**")
+                        .hasRole("CUSTOMER")
 
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/vehicles/**"
-                        ).hasRole("CUSTOMER")
-
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/api/vehicles/**"
-                        ).hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/vehicles/**")
+                        .hasRole("CUSTOMER")
 
                         // Staff / Admin
+                        .requestMatchers(HttpMethod.GET, "/api/vehicles")
+                        .hasAnyRole("ADMIN", "STAFF")
 
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/vehicles"
-                        ).hasAnyRole("ADMIN", "STAFF")
-
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/vehicles/*"
-                        ).hasAnyRole("ADMIN", "STAFF")
+                        .requestMatchers(HttpMethod.GET, "/api/vehicles/*")
+                        .hasAnyRole("ADMIN", "STAFF")
 
                         // =========================================
 
-
-                        .anyRequest()
-                        .authenticated()
+                        .anyRequest().authenticated()
                 )
 
                 .userDetailsService(userDetailsService)
 
                 .addFilterBefore(
                         jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                        UsernamePasswordAuthenticationFilter.class
+                );
 
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173",
+        configuration.setAllowedOriginPatterns(List.of(
                 "http://localhost:3000",
-                "https://auto-care-full-stack.vercel.app"
+                "http://localhost:5173",
+                "https://*.vercel.app"
         ));
 
         configuration.setAllowedMethods(List.of(
@@ -181,6 +154,7 @@ public class SecurityConfig {
         ));
 
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
@@ -190,5 +164,4 @@ public class SecurityConfig {
 
         return source;
     }
-
 }
