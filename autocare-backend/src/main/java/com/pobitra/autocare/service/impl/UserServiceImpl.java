@@ -45,25 +45,29 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(user);
 
-        // Send Welcome Email
-        emailService.sendEmail(
-                savedUser.getEmail(),
-                "Welcome to AutoCare",
-                """
-                Hello %s,
-
-                Welcome to AutoCare!
-
-                Your account has been created successfully.
-
-                You can now log in and start using AutoCare.
-
-                We are delighted to have you as a part of our AutoCare family.
-
-                Regards,
-                AutoCare Team
-                """.formatted(savedUser.getFullName())
-        );
+        // Send Welcome Email (don't fail registration if email sending fails)
+        try {
+            emailService.sendEmail(
+                    savedUser.getEmail(),
+                    "Welcome to AutoCare",
+                    """
+                    Hello %s,
+        
+                    Welcome to AutoCare!
+        
+                    Your account has been created successfully.
+        
+                    You can now log in and start using AutoCare.
+        
+                    We are delighted to have you as a part of our AutoCare family.
+        
+                    Regards,
+                    AutoCare Team
+                    """.formatted(savedUser.getFullName())
+            );
+        } catch (Exception e) {
+            e.printStackTrace(); // Replace with a logger in production
+        }
 
         return savedUser;
     }
