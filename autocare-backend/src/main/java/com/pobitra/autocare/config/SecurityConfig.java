@@ -82,7 +82,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/bookings")
                         .hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.GET, "/api/bookings/my")
+                        .requestMatchers(HttpMethod.GET, "/api/bookings/my-bookings")
                         .hasRole("CUSTOMER")
 
                         // Admin / Staff
