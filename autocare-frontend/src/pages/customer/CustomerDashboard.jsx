@@ -21,27 +21,35 @@ function CustomerDashboard() {
 
     const loadDashboard = async () => {
 
+        setLoading(true);
+
         try {
 
-            const loadDashboard = async () => {
-                setLoading(true);
+            const [bookingResponse, vehicleResponse] = await Promise.all([
 
-                try {
-                    const bookingResponse = await bookingService.getMyBookings();
-                    setBookings(bookingResponse.data || []);
-                } catch (e) {
-                    console.error("Booking Error:", e);
-                }
+                bookingService.getMyBookings(),
+                vehicleService.getMyVehicles()
 
-                try {
-                    const vehicleResponse = await vehicleService.getMyVehicles();
-                    setVehicles(vehicleResponse.data || []);
-                } catch (e) {
-                    console.error("Vehicle Error:", e);
-                }
+            ]);
 
-                setLoading(false);
-            };
+            setBookings(bookingResponse.data || []);
+            setVehicles(vehicleResponse.data || []);
+
+        }
+
+        catch (error) {
+
+            console.error("Dashboard Load Error:", error);
+
+        }
+
+        finally {
+
+            setLoading(false);
+
+        }
+
+    };
 
             const bookingData = bookingResponse.data || [];
 
