@@ -51,26 +51,6 @@ function CustomerDashboard() {
 
     };
 
-            const bookingData = bookingResponse.data || [];
-
-            const vehicleData = vehicleResponse.data || [];
-
-            setBookings(bookingData);
-
-            setVehicles(vehicleData);
-
-        } catch (error) {
-
-            console.error("Dashboard Load Error:", error);
-
-        } finally {
-
-            setLoading(false);
-
-        }
-
-    };
-
     const activeServices = bookings.filter(
 
         booking =>
