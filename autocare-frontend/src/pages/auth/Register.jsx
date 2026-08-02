@@ -14,6 +14,8 @@ function Register() {
 
         fullName: "",
         email: "",
+        phone: "",
+        address: "",
         password: "",
         confirmPassword: "",
         role: "CUSTOMER"
@@ -37,35 +39,38 @@ function Register() {
         e.preventDefault();
 
         if (!formData.fullName.trim()) {
-
             toast.error("Full name is required.");
-
             return;
-
         }
 
         if (!formData.email.trim()) {
-
             toast.error("Email is required.");
-
             return;
+        }
 
+        if (!formData.phone.trim()) {
+            toast.error("Phone number is required.");
+            return;
+        }
+
+        if (!/^[0-9]{10}$/.test(formData.phone)) {
+            toast.error("Phone number must be exactly 10 digits.");
+            return;
+        }
+
+        if (!formData.address.trim()) {
+            toast.error("Address is required.");
+            return;
         }
 
         if (formData.password.length < 6) {
-
             toast.error("Password must contain at least 6 characters.");
-
             return;
-
         }
 
         if (formData.password !== formData.confirmPassword) {
-
             toast.error("Passwords do not match.");
-
             return;
-
         }
 
         try {
@@ -75,11 +80,10 @@ function Register() {
             await authService.register({
 
                 fullName: formData.fullName,
-
                 email: formData.email,
-
+                phone: formData.phone,
+                address: formData.address,
                 password: formData.password,
-
                 role: "CUSTOMER"
 
             });
@@ -97,9 +101,7 @@ function Register() {
         catch (error) {
 
             const message =
-
                 error.response?.data?.message ||
-
                 "Registration failed.";
 
             toast.error(message);
@@ -129,9 +131,7 @@ function Register() {
                             <div className="text-center mb-4">
 
                                 <h2 className="fw-bold">
-
                                     Join AutoCare
-
                                 </h2>
 
                                 <p className="text-muted">
@@ -155,21 +155,13 @@ function Register() {
                                     </label>
 
                                     <input
-
                                         type="text"
-
                                         className="form-control"
-
                                         name="fullName"
-
                                         placeholder="Enter your full name"
-
                                         value={formData.fullName}
-
                                         onChange={handleChange}
-
                                         required
-
                                     />
 
                                 </div>
@@ -183,22 +175,54 @@ function Register() {
                                     </label>
 
                                     <input
-
                                         type="email"
-
                                         className="form-control"
-
                                         name="email"
-
                                         placeholder="Enter your email"
-
                                         value={formData.email}
-
                                         onChange={handleChange}
-
                                         required
-
                                     />
+
+                                </div>
+
+                                <div className="mb-3">
+
+                                    <label className="form-label">
+
+                                        Phone Number
+
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="phone"
+                                        placeholder="Enter 10 digit phone number"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        required
+                                    />
+
+                                </div>
+
+                                <div className="mb-3">
+
+                                    <label className="form-label">
+
+                                        Address
+
+                                    </label>
+
+                                    <textarea
+                                        className="form-control"
+                                        rows="3"
+                                        name="address"
+                                        placeholder="Enter your address"
+                                        value={formData.address}
+                                        onChange={handleChange}
+                                        required
+                                    ></textarea>
 
                                 </div>
 
@@ -211,21 +235,13 @@ function Register() {
                                     </label>
 
                                     <input
-
                                         type="password"
-
                                         className="form-control"
-
                                         name="password"
-
                                         placeholder="Minimum 6 characters"
-
                                         value={formData.password}
-
                                         onChange={handleChange}
-
                                         required
-
                                     />
 
                                 </div>
@@ -239,44 +255,26 @@ function Register() {
                                     </label>
 
                                     <input
-
                                         type="password"
-
                                         className="form-control"
-
                                         name="confirmPassword"
-
                                         placeholder="Confirm your password"
-
                                         value={formData.confirmPassword}
-
                                         onChange={handleChange}
-
                                         required
-
                                     />
 
                                 </div>
 
                                 <button
-
                                     type="submit"
-
                                     className="btn btn-primary w-100 py-2"
-
                                     disabled={loading}
-
                                 >
 
-                                    {
-
-                                        loading
-
-                                            ? "Creating Account..."
-
-                                            : "Join AutoCare"
-
-                                    }
+                                    {loading
+                                        ? "Creating Account..."
+                                        : "Join AutoCare"}
 
                                 </button>
 
@@ -295,11 +293,8 @@ function Register() {
                                 {" "}
 
                                 <Link
-
                                     to="/login"
-
                                     className="fw-semibold text-decoration-none"
-
                                 >
 
                                     Login

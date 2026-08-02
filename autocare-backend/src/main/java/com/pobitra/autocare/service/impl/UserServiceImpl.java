@@ -1,30 +1,38 @@
 package com.pobitra.autocare.service.impl;
 
+import com.pobitra.autocare.dto.ChangePasswordRequestDTO;
 import com.pobitra.autocare.dto.RegisterRequestDTO;
+import com.pobitra.autocare.dto.UpdateProfileRequestDTO;
+import com.pobitra.autocare.dto.UserProfileResponseDTO;
+import com.pobitra.autocare.entity.Customer;
 import com.pobitra.autocare.entity.User;
+import com.pobitra.autocare.enums.Role;
 import com.pobitra.autocare.exception.DuplicateResourceException;
 import com.pobitra.autocare.exception.ResourceNotFoundException;
+import com.pobitra.autocare.repository.CustomerRepository;
 import com.pobitra.autocare.repository.UserRepository;
 import com.pobitra.autocare.service.EmailService;
 import com.pobitra.autocare.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.pobitra.autocare.dto.ChangePasswordRequestDTO;
-import com.pobitra.autocare.dto.UpdateProfileRequestDTO;
-import com.pobitra.autocare.dto.UserProfileResponseDTO;
+
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder,
-                           EmailService emailService) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            CustomerRepository customerRepository,
+            PasswordEncoder passwordEncoder,
+            EmailService emailService) {
 
         this.userRepository = userRepository;
+        this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
     }
@@ -36,6 +44,10 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateResourceException("Email already exists.");
         }
 
+        if (customerRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new DuplicateResourceException("Customer email already exists.");
+        }
+
         User user = new User();
 
         user.setFullName(dto.getFullName());
@@ -45,28 +57,39 @@ public class UserServiceImpl implements UserService {
 
         User savedUser = userRepository.save(user);
 
-        // Send Welcome Email (don't fail registration if email sending fails)
+        if (savedUser.getRole() == Role.CUSTOMER) {
+
+            Customer customer = new Customer();
+
+            customer.setName(dto.getFullName());
+            customer.setEmail(dto.getEmail());
+            customer.setPhone(dto.getPhone());
+            customer.setAddress(dto.getAddress());
+
+            customerRepository.save(customer);
+        }
+
         try {
             emailService.sendEmail(
                     savedUser.getEmail(),
                     "Welcome to AutoCare",
                     """
                     Hello %s,
-        
+
                     Welcome to AutoCare!
-        
+
                     Your account has been created successfully.
-        
+
                     You can now log in and start using AutoCare.
-        
+
                     We are delighted to have you as a part of our AutoCare family.
-        
+
                     Regards,
                     AutoCare Team
                     """.formatted(savedUser.getFullName())
             );
         } catch (Exception e) {
-            e.printStackTrace(); // Replace with a logger in production
+            e.printStackTrace();
         }
 
         return savedUser;
@@ -132,8 +155,7 @@ public class UserServiceImpl implements UserService {
 
     private UserProfileResponseDTO mapToProfileDTO(User user) {
 
-        UserProfileResponseDTO dto =
-                new UserProfileResponseDTO();
+        UserProfileResponseDTO dto = new UserProfileResponseDTO();
 
         dto.setId(user.getId());
         dto.setFullName(user.getFullName());

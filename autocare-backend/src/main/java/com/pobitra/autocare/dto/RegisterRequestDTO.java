@@ -4,6 +4,7 @@ import com.pobitra.autocare.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class RegisterRequestDTO {
@@ -17,6 +18,13 @@ public class RegisterRequestDTO {
 
     @Size(min = 6, message = "Password must contain at least 6 characters.")
     private String password;
+
+    @NotBlank(message = "Phone number is required.")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits.")
+    private String phone;
+
+    @NotBlank(message = "Address is required.")
+    private String address;
 
     @NotNull(message = "Role is required.")
     private Role role;
@@ -46,6 +54,22 @@ public class RegisterRequestDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Role getRole() {
