@@ -11,6 +11,11 @@ const vehicleService = {
         return api.get("/vehicles/my");
     },
 
+    // Get one logged-in customer's vehicle
+    getMyVehicleById(id) {
+        return api.get(`/vehicles/my/${id}`);
+    },
+
     // Add new vehicle
     createVehicle(vehicle) {
         return api.post("/vehicles", vehicle);
@@ -30,12 +35,10 @@ const vehicleService = {
     // ADMIN / STAFF
     // ===========================
 
-    // Get all vehicles
     getAllVehicles() {
         return api.get("/vehicles");
     },
 
-    // Get vehicle by id
     getVehicleById(id) {
         return api.get(`/vehicles/${id}`);
     }

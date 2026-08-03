@@ -22,7 +22,7 @@ const EditVehicle = () => {
 
         try {
 
-            const response = await vehicleService.getVehicleById(id);
+            const response = await vehicleService.getMyVehicleById(id);
 
             setVehicle(response.data);
 
