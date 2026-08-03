@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicles")
-
 @Tag(name = "Vehicle API", description = "Vehicle Management APIs")
 public class VehicleController {
 
@@ -64,6 +63,25 @@ public class VehicleController {
     }
 
     // ===========================================
+    // CUSTOMER : MY VEHICLE BY ID
+    // ===========================================
+
+    @Operation(summary = "Get My Vehicle By Id")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @GetMapping("/my/{id}")
+    public ResponseEntity<VehicleResponseDTO> getMyVehicleById(
+            @PathVariable Long id,
+            Principal principal) {
+
+        return ResponseEntity.ok(
+                vehicleService.getMyVehicleById(
+                        id,
+                        principal.getName()
+                )
+        );
+    }
+
+    // ===========================================
     // ADMIN / STAFF : ALL VEHICLES
     // ===========================================
 
@@ -91,6 +109,7 @@ public class VehicleController {
                 vehicleService.getVehicleById(id)
         );
     }
+
     // ===========================================
     // CUSTOMER : UPDATE VEHICLE
     // ===========================================
@@ -132,5 +151,4 @@ public class VehicleController {
                 "Vehicle deleted successfully."
         );
     }
-
 }

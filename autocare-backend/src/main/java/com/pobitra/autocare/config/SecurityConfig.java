@@ -103,7 +103,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/vehicles")
                         .hasRole("CUSTOMER")
 
-                        .requestMatchers(HttpMethod.GET, "/api/vehicles/my")
+                        .requestMatchers(HttpMethod.GET, "/api/vehicles/my/**")
                         .hasRole("CUSTOMER")
 
                         .requestMatchers(HttpMethod.PUT, "/api/vehicles/**")

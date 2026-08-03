@@ -11,13 +11,17 @@ public interface VehicleService {
     // CUSTOMER
     // ==============================
 
-    // Add a vehicle for the logged-in customer
+   //Add a vehicle for the logged-in customer
     VehicleResponseDTO createVehicle(
             VehicleRequestDTO dto,
             String email);
 
     // Get all vehicles of the logged-in customer
     List<VehicleResponseDTO> getMyVehicles(
+            String email);
+    // Get one vehicle of the logged-in customer
+    VehicleResponseDTO getMyVehicleById(
+            Long id,
             String email);
 
     // Update own vehicle

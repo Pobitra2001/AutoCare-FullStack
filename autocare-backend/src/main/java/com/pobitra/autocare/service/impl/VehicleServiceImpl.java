@@ -95,6 +95,35 @@ public class VehicleServiceImpl implements VehicleService {
                 .toList();
     }
 
+    @Override
+    public VehicleResponseDTO getMyVehicleById(
+            Long id,
+            String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found."));
+
+        Customer customer = customerRepository.findByEmail(user.getEmail())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Customer not found."));
+
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Vehicle not found."));
+
+        // Customer can access only his own vehicle
+        if (!vehicle.getCustomer().getId().equals(customer.getId())) {
+            throw new ResourceNotFoundException(
+                    "Vehicle not found.");
+        }
+
+        return mapToDTO(vehicle);
+    }
+
     // ===========================================
     // ADMIN / STAFF
     // ===========================================
