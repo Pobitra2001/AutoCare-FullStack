@@ -182,12 +182,29 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void deleteBooking(Long id) {
+    public void deleteBooking(
+            Long id,
+            String email) {
 
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
-                                "Booking not found with id: " + id));
+                                "Booking not found."
+                        ));
+
+        // Customer can delete only their own booking
+        if (!booking.getEmail().equals(email)) {
+            throw new ResourceNotFoundException(
+                    "Booking not found."
+            );
+        }
+
+        // Booking can be deleted only while pending
+        if (booking.getStatus() != BookingStatus.PENDING) {
+            throw new IllegalStateException(
+                    "Only pending bookings can be deleted."
+            );
+        }
 
         bookingRepository.delete(booking);
     }

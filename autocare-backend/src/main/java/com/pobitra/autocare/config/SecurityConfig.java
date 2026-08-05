@@ -97,7 +97,7 @@ public class SecurityConfig {
                                 .hasAnyRole("ADMIN", "STAFF")
 
                         .requestMatchers(HttpMethod.DELETE, "/api/bookings/**")
-                        .hasRole("ADMIN")
+                        .hasRole("CUSTOMER")
 
                         // =========================================
                         // VEHICLE APIs

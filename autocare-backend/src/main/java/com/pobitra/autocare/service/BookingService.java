@@ -34,5 +34,8 @@ public interface BookingService {
             BookingStatus status
     );
 
-    void deleteBooking(Long id);
+    void deleteBooking(
+            Long id,
+            String email
+    );
 }

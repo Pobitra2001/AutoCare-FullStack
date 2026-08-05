@@ -87,14 +87,19 @@ public class BookingController {
                 bookingService.updateBookingStatus(id, status));
     }
 
-    @Operation(summary = "Delete booking")
+    @Operation(summary = "Delete My Booking")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBooking(
-            @PathVariable Long id) {
+            @PathVariable Long id,
+            Principal principal) {
 
-        bookingService.deleteBooking(id);
+        bookingService.deleteBooking(
+                id,
+                principal.getName()
+        );
 
         return ResponseEntity.ok(
-                "Booking deleted successfully.");
+                "Booking deleted successfully."
+        );
     }
 }
