@@ -89,8 +89,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/bookings/**")
                         .hasAnyRole("ADMIN", "STAFF")
 
-                        .requestMatchers(HttpMethod.PUT, "/api/bookings/**")
-                        .hasAnyRole("ADMIN", "STAFF")
+                                // Customer can cancel own booking
+                                .requestMatchers(HttpMethod.PUT, "/api/bookings/*/cancel")
+                                .hasRole("CUSTOMER")
+                                 // Admin / Staff can update booking status
+                                .requestMatchers(HttpMethod.PUT, "/api/bookings/*/status")
+                                .hasAnyRole("ADMIN", "STAFF")
 
                         .requestMatchers(HttpMethod.DELETE, "/api/bookings/**")
                         .hasRole("ADMIN")
