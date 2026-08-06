@@ -48,19 +48,16 @@ function MyBookings() {
     const cancelBooking = async (id) => {
 
         if (!window.confirm(
-            "Are you sure you want to cancel this booking?"
+            "Are you sure you want to delete this booking?"
         )) {
             return;
         }
 
         try {
 
-            await bookingService.updateBookingStatus(
-                id,
-                "CANCELLED"
-            );
+            await bookingService.deleteBooking(id);
 
-            toast.success("Booking cancelled successfully.");
+            toast.success("Booking deleted successfully.");
 
             loadBookings();
 
@@ -70,7 +67,7 @@ function MyBookings() {
 
             toast.error(
                 error.response?.data?.message ||
-                "Unable to cancel booking."
+                "Unable to delete booking."
             );
 
         }
