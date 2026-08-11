@@ -8,9 +8,7 @@ function Navbar() {
 
     const navigate = useNavigate();
 
-    const [user, setUser] = useState(
-        JSON.parse(localStorage.getItem("user"))
-    );
+    const { user, logout } = useAuth();
 
     const [showDropdown, setShowDropdown] = useState(false);
 
