@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import logo from "../../assets/images/autocare-logo.svg";
 
 import "../../assets/styles/navbar.css";
 
@@ -91,7 +92,7 @@ function Navbar() {
                     to="/"
                 >
 
-                    AutoCare
+                   <img src={logo} alt="AutoCare" />
 
                 </NavLink>
 

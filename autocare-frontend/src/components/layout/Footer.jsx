@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 
 import "../../assets/styles/footer.css";
+import logo from "../../assets/images/autocare-logo.svg";
 
 function Footer() {
 
@@ -32,9 +33,12 @@ function Footer() {
 
           <div className="col-lg-4">
 
-            <h2 className="footer-logo">
-              AutoCare
-            </h2>
+           <div className="footer-logo">
+               <img
+                   src={logo}
+                   alt="AutoCare"
+               />
+           </div>
 
             <p className="footer-description">
               Your trusted automobile service platform providing
