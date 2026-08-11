@@ -3,9 +3,19 @@
 ============================== */
 
 .navbar {
-    background: #ffffff !important;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.82) !important;
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+
     padding: 14px 0;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 1000;
 }
 
 
@@ -23,6 +33,12 @@
     width: 150px;
     height: auto;
     display: block;
+
+    transition: 0.3s ease;
+}
+
+.logo:hover img {
+    transform: scale(1.03);
 }
 
 
@@ -33,7 +49,9 @@
 .nav-link {
     color: #333 !important;
     font-weight: 500;
+
     margin-left: 18px;
+
     transition: 0.3s ease;
 }
 
@@ -49,15 +67,20 @@
 .btn-register {
     background: #0d6efd;
     color: #ffffff !important;
+
     border-radius: 30px;
+
     padding: 9px 20px !important;
+
     margin-left: 8px !important;
+
     transition: 0.3s ease;
 }
 
 .btn-register:hover {
     background: #0b5ed7;
     color: #ffffff !important;
+
     transform: translateY(-1px);
 }
 
@@ -82,6 +105,7 @@
     border-radius: 25px;
 
     cursor: pointer;
+
     transition: 0.3s ease;
 }
 
@@ -207,6 +231,8 @@
 
     .navbar {
         padding: 12px 0;
+
+        background: rgba(255, 255, 255, 0.94) !important;
     }
 
     .logo img {
@@ -224,6 +250,7 @@
 
     .btn-register {
         display: inline-block;
+
         margin: 10px 0 5px !important;
     }
 
@@ -240,5 +267,4 @@
 
         box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
     }
-
 }
