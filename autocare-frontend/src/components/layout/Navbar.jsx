@@ -1,8 +1,84 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import "../../assets/styles/navbar.css";
 
 function Navbar() {
+
+    const navigate = useNavigate();
+
+    const [user, setUser] = useState(
+        JSON.parse(localStorage.getItem("user"))
+    );
+
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    // ==============================
+    // GET FIRST NAME
+    // ==============================
+
+    const getFirstName = () => {
+
+        if (!user) {
+            return "";
+        }
+
+        const name = user.fullName || user.name || "";
+
+        return name.split(" ")[0];
+
+    };
+
+    // ==============================
+    // GO TO DASHBOARD
+    // ==============================
+
+    const handleProfile = () => {
+
+        if (!user) {
+            return;
+        }
+
+        setShowDropdown(false);
+
+        const role = user.role;
+
+        if (role === "CUSTOMER") {
+
+            navigate("/customer/dashboard");
+
+        } else if (role === "ADMIN") {
+
+            navigate("/admin/dashboard");
+
+        } else if (role === "STAFF") {
+
+            navigate("/staff/dashboard");
+
+        } else {
+
+            navigate("/");
+
+        }
+
+    };
+
+    // ==============================
+    // LOGOUT
+    // ==============================
+
+    const handleLogout = () => {
+
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+
+        setUser(null);
+
+        setShowDropdown(false);
+
+        navigate("/");
+
+    };
 
     return (
 
@@ -10,11 +86,23 @@ function Navbar() {
 
             <div className="container">
 
-                <NavLink className="navbar-brand logo" to="/">
+                {/* ==============================
+                    LOGO
+                ============================== */}
+
+                <NavLink
+                    className="navbar-brand logo"
+                    to="/"
+                >
 
                     AutoCare
 
                 </NavLink>
+
+
+                {/* ==============================
+                    MOBILE TOGGLE
+                ============================== */}
 
                 <button
                     className="navbar-toggler"
@@ -30,13 +118,27 @@ function Navbar() {
 
                 </button>
 
-                <div className="collapse navbar-collapse" id="menu">
+
+                {/* ==============================
+                    NAVIGATION
+                ============================== */}
+
+                <div
+                    className="collapse navbar-collapse"
+                    id="menu"
+                >
 
                     <ul className="navbar-nav ms-auto align-items-center">
 
+
+                        {/* HOME */}
+
                         <li className="nav-item">
 
-                            <NavLink className="nav-link" to="/">
+                            <NavLink
+                                className="nav-link"
+                                to="/"
+                            >
 
                                 Home
 
@@ -44,9 +146,15 @@ function Navbar() {
 
                         </li>
 
+
+                        {/* ABOUT */}
+
                         <li className="nav-item">
 
-                            <NavLink className="nav-link" to="/about">
+                            <NavLink
+                                className="nav-link"
+                                to="/about"
+                            >
 
                                 About
 
@@ -54,9 +162,15 @@ function Navbar() {
 
                         </li>
 
+
+                        {/* SERVICES */}
+
                         <li className="nav-item">
 
-                            <NavLink className="nav-link" to="/services">
+                            <NavLink
+                                className="nav-link"
+                                to="/services"
+                            >
 
                                 Services
 
@@ -64,9 +178,15 @@ function Navbar() {
 
                         </li>
 
+
+                        {/* CONTACT */}
+
                         <li className="nav-item">
 
-                            <NavLink className="nav-link" to="/contact">
+                            <NavLink
+                                className="nav-link"
+                                to="/contact"
+                            >
 
                                 Contact
 
@@ -74,18 +194,156 @@ function Navbar() {
 
                         </li>
 
-                        <li className="nav-item ms-3">
 
-                            <NavLink
-                                className="nav-link btn-register"
-                                to="/register"
-                            >
+                        {/* ==============================
+                            GUEST
+                        ============================== */}
 
-                                Join AutoCare
+                        {!user && (
 
-                            </NavLink>
+                            <li className="nav-item ms-3">
 
-                        </li>
+                                <NavLink
+                                    className="nav-link btn-register"
+                                    to="/register"
+                                >
+
+                                    Join AutoCare
+
+                                </NavLink>
+
+                            </li>
+
+                        )}
+
+
+                        {/* ==============================
+                            LOGGED-IN USER
+                        ============================== */}
+
+                        {user && (
+
+                            <li className="nav-item ms-3">
+
+                                <div className="profile-dropdown">
+
+
+                                    {/* USER BUTTON */}
+
+                                    <button
+                                        type="button"
+                                        className="profile-button"
+                                        onClick={() =>
+                                            setShowDropdown(
+                                                !showDropdown
+                                            )
+                                        }
+                                    >
+
+                                        <span className="profile-icon">
+
+                                            👤
+
+                                        </span>
+
+                                        <span>
+
+                                            {getFirstName()}
+
+                                        </span>
+
+                                        <span className="dropdown-arrow">
+
+                                            ▾
+
+                                        </span>
+
+                                    </button>
+
+
+                                    {/* DROPDOWN */}
+
+                                    {showDropdown && (
+
+                                        <div className="profile-menu">
+
+
+                                            {/* USER NAME */}
+
+                                            <div className="profile-menu-header">
+
+                                                <span className="profile-menu-icon">
+
+                                                    👤
+
+                                                </span>
+
+                                                <span>
+
+                                                    {getFirstName()}
+
+                                                </span>
+
+                                            </div>
+
+
+                                            <div className="dropdown-divider"></div>
+
+
+                                            {/* YOUR PROFILE */}
+
+                                            <button
+                                                type="button"
+                                                className="profile-menu-item"
+                                                onClick={handleProfile}
+                                            >
+
+                                                <span>
+
+                                                    🏠
+
+                                                </span>
+
+                                                <span>
+
+                                                    Your Profile
+
+                                                </span>
+
+                                            </button>
+
+
+                                            {/* LOGOUT */}
+
+                                            <button
+                                                type="button"
+                                                className="profile-menu-item logout-item"
+                                                onClick={handleLogout}
+                                            >
+
+                                                <span>
+
+                                                    🚪
+
+                                                </span>
+
+                                                <span>
+
+                                                    Logout
+
+                                                </span>
+
+                                            </button>
+
+                                        </div>
+
+                                    )}
+
+                                </div>
+
+                            </li>
+
+                        )}
 
                     </ul>
 

@@ -1,77 +1,399 @@
-.navbar{
+.navbar {
 
-    background:white !important;
+    background: white !important;
 
-    box-shadow:0 2px 15px rgba(0,0,0,.08);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, .08);
 
-    padding:18px 0;
-
-}
-
-.logo{
-
-    color:#0d6efd !important;
-
-    font-size:30px;
-
-    font-weight:700;
+    padding: 18px 0;
 
 }
 
-.nav-link{
 
-    color:#333 !important;
+/* ==============================
+   LOGO
+============================== */
 
-    font-weight:500;
+.logo {
 
-    margin-left:18px;
+    color: #0d6efd !important;
 
-    transition:.3s;
+    font-size: 30px;
 
-}
-
-.nav-link:hover{
-
-    color:#0d6efd !important;
+    font-weight: 700;
 
 }
 
-.btn-login{
 
-    border:2px solid #0d6efd;
+/* ==============================
+   NAV LINKS
+============================== */
 
-    color:#0d6efd;
+.nav-link {
 
-    border-radius:30px;
+    color: #333 !important;
 
-    padding:8px 18px;
+    font-weight: 500;
 
-    transition:.3s;
+    margin-left: 18px;
 
-}
-
-.btn-login:hover{
-
-    background:#0d6efd;
-
-    color:white !important;
+    transition: .3s;
 
 }
 
-.btn-register{
+.nav-link:hover {
 
-    background:#0d6efd;
-
-    color:white !important;
-
-    border-radius:30px;
-
-    padding:8px 18px;
+    color: #0d6efd !important;
 
 }
 
-.btn-register:hover{
 
-    background:#0b5ed7;
+/* ==============================
+   LOGIN BUTTON
+============================== */
+
+.btn-login {
+
+    border: 2px solid #0d6efd;
+
+    color: #0d6efd;
+
+    border-radius: 30px;
+
+    padding: 8px 18px;
+
+    transition: .3s;
+
+}
+
+.btn-login:hover {
+
+    background: #0d6efd;
+
+    color: white !important;
+
+}
+
+
+/* ==============================
+   JOIN AUTOCARE BUTTON
+============================== */
+
+.btn-register {
+
+    background: #0d6efd;
+
+    color: white !important;
+
+    border-radius: 30px;
+
+    padding: 8px 18px;
+
+    transition: .3s;
+
+}
+
+.btn-register:hover {
+
+    background: #0b5ed7;
+
+}
+
+
+/* ==================================================
+   PROFILE DROPDOWN
+================================================== */
+
+.profile-dropdown {
+
+    position: relative;
+
+}
+
+
+/* ==============================
+   PROFILE BUTTON
+============================== */
+
+.profile-button {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    background: transparent;
+
+    border: none;
+
+    color: #333;
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+    padding: 8px 4px;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+}
+
+.profile-button:hover {
+
+    color: #0d6efd;
+
+}
+
+
+/* ==============================
+   PROFILE ICON
+============================== */
+
+.profile-icon {
+
+    font-size: 18px;
+
+    line-height: 1;
+
+}
+
+
+/* ==============================
+   DROPDOWN ARROW
+============================== */
+
+.dropdown-arrow {
+
+    font-size: 15px;
+
+    margin-left: 2px;
+
+    transition: .2s;
+
+}
+
+
+/* ==============================
+   DROPDOWN MENU
+============================== */
+
+.profile-menu {
+
+    position: absolute;
+
+    top: calc(100% + 10px);
+
+    right: 0;
+
+    width: 190px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .12);
+
+    padding: 8px;
+
+    z-index: 1050;
+
+    animation: dropdownFade .2s ease;
+
+}
+
+
+/* ==============================
+   DROPDOWN ANIMATION
+============================== */
+
+@keyframes dropdownFade {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(-5px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}
+
+
+/* ==============================
+   DROPDOWN HEADER
+============================== */
+
+.profile-menu-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 10px 12px;
+
+    color: #333;
+
+    font-weight: 600;
+
+}
+
+
+/* ==============================
+   DROPDOWN HEADER ICON
+============================== */
+
+.profile-menu-icon {
+
+    font-size: 18px;
+
+}
+
+
+/* ==============================
+   DIVIDER
+============================== */
+
+.dropdown-divider {
+
+    height: 1px;
+
+    background: #eee;
+
+    margin: 4px 0 6px;
+
+}
+
+
+/* ==============================
+   DROPDOWN ITEMS
+============================== */
+
+.profile-menu-item {
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    background: transparent;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 10px 12px;
+
+    color: #333;
+
+    font-size: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+/* ==============================
+   ITEM HOVER
+============================== */
+
+.profile-menu-item:hover {
+
+    background: #f0f6ff;
+
+    color: #0d6efd;
+
+}
+
+
+/* ==============================
+   LOGOUT
+============================== */
+
+.logout-item:hover {
+
+    background: #fff1f1;
+
+    color: #dc3545;
+
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 991px) {
+
+    .navbar {
+
+        padding: 14px 0;
+
+    }
+
+
+    .nav-link {
+
+        margin-left: 0;
+
+        padding: 10px 0 !important;
+
+    }
+
+
+    .btn-register {
+
+        display: inline-block;
+
+        margin-top: 8px;
+
+    }
+
+
+    .profile-dropdown {
+
+        margin-top: 8px;
+
+    }
+
+
+    .profile-button {
+
+        padding-left: 0;
+
+    }
+
+
+    .profile-menu {
+
+        position: static;
+
+        width: 100%;
+
+        margin-top: 5px;
+
+        box-shadow: none;
+
+        border: 1px solid #eee;
+
+    }
 
 }
