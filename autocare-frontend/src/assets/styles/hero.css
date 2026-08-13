@@ -22,7 +22,7 @@
             rgba(0, 0, 0, 0.52) 75%,
             rgba(0, 0, 0, 0.45) 100%
         ),
-        url("../images/hero-banner.jpg");
+        url("../images/hero-banner.jpeg");
 
     background-size: cover;
     background-position: center;
